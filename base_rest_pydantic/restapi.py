@@ -43,15 +43,8 @@ class PydanticModel(restapi.RestMethodParam):
             raise UserError(_("BadRequest %s") % ve.json(indent=0)) from ve
 
     def to_response(self, service, result):
-        # do we really need to validate the instance????
-        json_dict = result.dict()
-        to_validate = (
-            json_dict if not result.__config__.orm_mode else result.dict(by_alias=True)
-        )
-        *_, validation_error = validate_model(self._model_cls, to_validate)
-        if validation_error:
-            raise SystemError(_("Invalid Response %s") % validation_error)
-        return json_dict
+        return result.dict(by_alias=True)
+        
 
     def to_openapi_query_parameters(self, servic, spec):
         json_schema = self._model_cls.schema()
