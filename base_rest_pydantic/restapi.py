@@ -40,7 +40,7 @@ class PydanticModel(restapi.RestMethodParam):
         try:
             return self._model_cls(**params)
         except ValidationError as ve:
-            raise UserError(_("BadRequest %s") % ve.json(indent=0)) from ve
+            raise UserError(_("BadRequest %s") % str(ve)) from ve
 
     def to_response(self, service, result):
         return result.dict(by_alias=True)
